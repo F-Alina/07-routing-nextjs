@@ -1,0 +1,20 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  padding-bottom: 8px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 28px;
+  color: #333;
+}
+
+.content {
+  font-size: 18px;
+  line-height: 26px;
+  color: #444;
+  white-space: pre-wrap;
+}
