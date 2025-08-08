@@ -14,13 +14,6 @@ const NotesByTags = async ({ params }: Props) => {
   const tag = slug[0] === "all" ? undefined : slug[0];
   const data = await fetchNotes(page, perPage, search, tag);
 
-  return (
-    <NotesClient
-      initialData={data}
-      initialPage={page}
-      initialSearch={search}
-      initialTag={tag || "All"}
-    />
-  );
+  return <NotesClient initialData={data} tag={tag || "All"} />;
 };
 export default NotesByTags;

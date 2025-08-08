@@ -18,36 +18,34 @@ import toast, { Toaster } from "react-hot-toast";
 
 type NotesClientProps = {
   initialData: FetchNotesResponse;
-  initialPage: number;
-  initialSearch: string;
-  initialTag: string;
+  tag: string;
 };
 
-export default function NotesClient({
-  initialData,
-  initialPage,
-  initialSearch,
-  initialTag,
-}: NotesClientProps) {
-  const [search, setSearch] = useState(initialSearch);
-  const [currentPage, setCurrentPage] = useState(initialPage);
+export default function NotesClient({ initialData, tag }: NotesClientProps) {
+  const [search, setSearch] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const handleSearchChange = useDebouncedCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSearch(event.target.value);
-      setCurrentPage(1);
-    },
-    1000
-  );
+  useEffect(() => {
+    setSearch("");
+    setCurrentPage(1);
+  }, [tag]);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setInputValue(value);
+    debouncedSearch(value);
+  };
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    setSearch(value);
+    setCurrentPage(1);
+  }, 1000);
 
   const { data, isLoading, isError, isSuccess } = useQuery({
-    queryKey: ["notes", currentPage, search, initialTag],
-    queryFn: () => fetchNotes(currentPage, 12, search, initialTag),
+    queryKey: ["notes", currentPage, search, tag],
+    queryFn: () => fetchNotes(currentPage, 12, search, tag),
     placeholderData: keepPreviousData,
-    initialData:
-      currentPage === initialPage && search === initialSearch
-        ? initialData
-        : undefined,
+    initialData: currentPage === 1 && search === "" ? initialData : undefined,
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,7 +64,7 @@ export default function NotesClient({
   return (
     <div className={css.app}>
       <header className={css.toolbar}>
-        <SearchBox onChange={handleSearchChange} />
+        <SearchBox value={inputValue} onChange={handleSearchChange} />
         {totalPages > 1 && (
           <Pagination
             page={currentPage}

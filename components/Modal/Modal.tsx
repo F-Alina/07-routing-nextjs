@@ -17,7 +17,9 @@ const Modal = ({ children }: Props) => {
     <div className={css.backdrop}>
       <div className={css.modal}>
         {children}
-        <button onClick={close}>Close</button>
+        <button className={css.button} onClick={close}>
+          Close
+        </button>
       </div>
     </div>
   );
